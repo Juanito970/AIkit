@@ -20,6 +20,7 @@ void AIkit1Callback(const sensor_msgs::Imu::ConstPtr &values)
   m = m.transpose();
   m = {m[2],m[0],m[1]};
   m1 = m.transpose();
+  m1.getRotation(q1);
 }
 
 int main(int argc, char** argv){
@@ -28,7 +29,12 @@ int main(int argc, char** argv){
 
   ros::Rate r(50);
   ros::Subscriber AIkit1_sub = n.subscribe("sensorTopic",10,AIkit1Callback);
+  ros::Publisher AIkit1_pub = n.advertise<sensor_msgs::Imu>("AIkit1r/imu", 10);
   while(n.ok()){
+    sensor_msgs::Imu imu1;
+    imu1.orientation = q1;
+    imu1.orientation_covariance = {0,0,0,0,0,0,0,0,0};
+    
     r.sleep();
   }
 }
